@@ -8,3 +8,7 @@
 # composer itself is not needed
 composer.phar
 composer.lock
+
+# test files
+tests/_output/*
+tests/_support/_generated
