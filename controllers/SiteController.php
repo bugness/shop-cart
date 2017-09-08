@@ -7,9 +7,11 @@ use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
-use app\models\EntryForm;
-use app\models\LoginForm;
 use app\models\ContactForm;
+use app\models\EntryForm;
+use app\models\Item;
+use app\models\LoginForm;
+use app\models\Product;
 
 class SiteController extends Controller
 {
@@ -57,29 +59,12 @@ class SiteController extends Controller
 
     public function actionIndex()
     {
-        return $this->render('index');
-    }
-
-    public function actionLogin()
-    {
-        if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
-        }
-
-        $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
-        }
-        return $this->render('login', [
-            'model' => $model,
+        return $this->render('index', [
+            'products' => Product::find()->all(),
+            'cart' => Item::find()->where([
+                'session' => Yii::$app->session->id,
+            ])->count(),
         ]);
-    }
-
-    public function actionLogout()
-    {
-        Yii::$app->user->logout();
-
-        return $this->goHome();
     }
 
     public function actionContact()
