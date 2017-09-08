@@ -1,2 +1,3 @@
-# shop-cart
-Demo Application (Yii Framework 2)
+# ShopCart
+
+    Demo Application (Yii Framework 2)
