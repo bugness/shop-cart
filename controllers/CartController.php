@@ -16,23 +16,15 @@ class CartController extends Controller
             return new NotFoundHttpException;
         }
 
-        $item = new Item;
-        $item->product_id = $product->id;
-        $item->amount = $product->price;
-        $item->session = Yii::$app->session->id;
-        $item->save();
+        Yii:$app->cart->add($product);
 
         return $this->goBack();
     }
 
     public function actionIndex()
     {
-        $items = Item::find()->where([
-            'session' => Yii::$app->session->id,
-        ])->all();
-
         return $this->render('index', [
-            'items' => $items,
+            'items' => Yii::$app->cart->items(),
         ]);
     }
 
@@ -44,7 +36,7 @@ class CartController extends Controller
 
         $item->delete();
 
-        return $this->goBack();
+        return $this->redirect(['cart/index']);
     }
 
 }

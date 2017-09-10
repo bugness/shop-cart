@@ -11,6 +11,7 @@ use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
 
 AppAsset::register($this);
+
 ?>
 <?php $this->beginPage(); ?>
 <!DOCTYPE html>
@@ -38,21 +39,24 @@ AppAsset::register($this);
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
-            ['label' => 'Home', 'url' => ['/site/index']],
-            ['label' => 'About', 'url' => ['/site/about']],
-            ['label' => 'Contact', 'url' => ['/site/contact']],
-            Yii::$app->user->isGuest ? (
-                ['label' => 'Login', 'url' => ['/auth/login']]
-            ) : (
-                '<li>'
-                . Html::beginForm(['/auth/logout'], 'post')
-                . Html::submitButton(
-                    'Logout (' . Yii::$app->user->identity->username . ')',
-                    ['class' => 'btn btn-link logout']
-                )
-                . Html::endForm()
-                . '</li>'
-            )
+            ['label' => Yii::t('app', 'Home'), 'url' => ['/site/index']],
+            // ['label' => Yii::t('app', 'About'), 'url' => ['/site/about']],
+            // ['label' => Yii::t('app', 'Contact'), 'url' => ['/site/contact']],
+            Yii::$app->cart->count() ? (
+                ['label' => Yii::t('app', 'Cart ({0,number})', Yii::$app->cart->count()), 'url' => ['/cart/index']]
+            ) : (''),
+            // Yii::$app->user->isGuest ? (
+            //     ['label' => Yii::t('app', 'Login'), 'url' => ['/auth/login']]
+            // ) : (
+            //     '<li>'
+            //     . Html::beginForm(['/auth/logout'], 'post')
+            //     . Html::submitButton(
+            //         Yii::t('app', 'Logout ({username})', ['username' => Yii::$app->user->identity->username]),
+            //         ['class' => 'btn btn-link logout']
+            //     )
+            //     . Html::endForm()
+            //     . '</li>'
+            // )
         ],
     ]);
     NavBar::end();
@@ -70,7 +74,6 @@ AppAsset::register($this);
 <footer class="footer">
     <div class="container">
         <p class="pull-left">&copy; My Awesome Shop <?php echo date('Y'); ?></p>
-
         <p class="pull-right"></p>
     </div>
 </footer>

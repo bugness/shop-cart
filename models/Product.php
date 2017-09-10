@@ -54,4 +54,13 @@ class Product extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Item::className(), ['product_id' => 'id']);
     }
+
+    /**
+     * @param string $prefix
+     * @return void
+     */
+    public function getPrice($prefix = '')
+    {
+        return $prefix . number_format($this->price, 2);
+    }
 }

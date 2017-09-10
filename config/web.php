@@ -47,7 +47,12 @@ $config = [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                '/' => 'site/index',
+                'cart/' => 'cart/index',
             ],
+        ],
+        'cart' => [
+            'class' => 'app\components\Cart',
         ],
     ],
     'params' => $params,

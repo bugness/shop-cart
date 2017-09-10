@@ -9,7 +9,6 @@ use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\ContactForm;
 use app\models\EntryForm;
-use app\models\Item;
 use app\models\LoginForm;
 use app\models\Product;
 
@@ -61,15 +60,12 @@ class SiteController extends Controller
     {
         return $this->render('index', [
             'products' => Product::find()->all(),
-            'cart' => Item::find()->where([
-                'session' => Yii::$app->session->id,
-            ])->count(),
         ]);
     }
 
     public function actionContact()
     {
-        $model = new ContactForm();
+        $model = new ContactForm;
         if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
             Yii::$app->session->setFlash('contactFormSubmitted');
 
@@ -85,14 +81,9 @@ class SiteController extends Controller
         return $this->render('about');
     }
 
-    public function actionSay($message = 'Hello')
-    {
-        return $this->render('say', ['message' => $message]);
-    }
-
     public function actionEntry()
     {
-        $model = new EntryForm();
+        $model = new EntryForm;
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             // valid data received in $model

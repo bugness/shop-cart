@@ -57,4 +57,13 @@ class Item extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Product::className(), ['id' => 'product_id']);
     }
+
+    /**
+     * @param string $prefix
+     * @return void
+     */
+    public function getAmount($prefix = '')
+    {
+        return $prefix . number_format($this->amount, 2);
+    }
 }
