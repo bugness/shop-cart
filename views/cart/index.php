@@ -30,6 +30,14 @@ $this->title = Yii::t('app', 'My Cart');
                     <?php endforeach; ?>
                     <li class="list-group-item list-group-item-info">
                         <?php echo Yii::t('app', 'Total: {0,number,currency}', Yii::$app->cart->total()); ?>
+                        <span class="pull-right"><?php echo Html::a(
+                            Html::tag('span', '', ['class' => 'glyphicon glyphicon-usd']),
+                            ['cart/checkout'],
+                            [
+                                'class' => 'btn btn-primary btn-xs checkout-link',
+                                'title' => Yii::t('app', 'Checkout'),
+                            ]
+                        ); ?></span>
                     </li>
                 </ul>
                 <?php else: ?>

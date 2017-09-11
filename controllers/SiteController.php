@@ -67,7 +67,7 @@ class SiteController extends Controller
     {
         $model = new ContactForm;
         if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
-            Yii::$app->session->setFlash('contactFormSubmitted');
+            Yii::$app->session->setFlash('sucess', Yii::t('app', 'Message has been sent'));
 
             return $this->refresh();
         }
@@ -79,21 +79,5 @@ class SiteController extends Controller
     public function actionAbout()
     {
         return $this->render('about');
-    }
-
-    public function actionEntry()
-    {
-        $model = new EntryForm;
-
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            // valid data received in $model
-
-            // do something meaningful here about $model ...
-
-            return $this->render('entry-confirm', ['model' => $model]);
-        } else {
-            // either the page is initially displayed or there is some validation error
-            return $this->render('entry', ['model' => $model]);
-        }
     }
 }

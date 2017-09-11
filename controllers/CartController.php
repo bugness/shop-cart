@@ -3,10 +3,11 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Item;
-use app\models\Product;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use app\models\Item;
+use app\models\OrderForm;
+use app\models\Product;
 
 class CartController extends Controller
 {
@@ -16,7 +17,7 @@ class CartController extends Controller
             return new NotFoundHttpException;
         }
 
-        Yii:$app->cart->add($product);
+        Yii::$app->cart->add($product);
 
         return $this->goBack();
     }
@@ -39,4 +40,18 @@ class CartController extends Controller
         return $this->redirect(['cart/index']);
     }
 
+    public function actionCheckout()
+    {
+        $form = new OrderForm;
+
+        if ($form->load(Yii::$app->request->post()) && $form->validate()) {
+            $form->createOrder();
+            Yii::$app->session->setFlash('success', Yii::t('app', 'Order has been submitted'));
+            return $this->goHome();
+        }
+
+        return $this->render('checkout', [
+            'model' => $form,
+        ]);
+    }
 }
