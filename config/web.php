@@ -49,6 +49,7 @@ $config = [
             'rules' => [
                 '/' => 'site/index',
                 'cart/' => 'cart/index',
+                'signup/' => 'user/signup',
             ],
         ],
         'cart' => [

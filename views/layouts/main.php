@@ -45,18 +45,19 @@ AppAsset::register($this);
             Yii::$app->cart->count() ? (
                 ['label' => Yii::t('app', 'Cart ({0,number})', Yii::$app->cart->count()), 'url' => ['/cart/index']]
             ) : (''),
-            // Yii::$app->user->isGuest ? (
-            //     ['label' => Yii::t('app', 'Login'), 'url' => ['/auth/login']]
-            // ) : (
-            //     '<li>'
-            //     . Html::beginForm(['/auth/logout'], 'post')
-            //     . Html::submitButton(
-            //         Yii::t('app', 'Logout ({username})', ['username' => Yii::$app->user->identity->username]),
-            //         ['class' => 'btn btn-link logout']
-            //     )
-            //     . Html::endForm()
-            //     . '</li>'
-            // )
+            Yii::$app->user->isGuest ? (['label' => Yii::t('app', 'Signup'), 'url' => ['/user/signup']]) : (''),
+            Yii::$app->user->isGuest ? (
+                ['label' => Yii::t('app', 'Login'), 'url' => ['/auth/login']]
+            ) : (
+                '<li>'
+                . Html::beginForm(['/auth/logout'], 'post')
+                . Html::submitButton(
+                    Yii::t('app', 'Logout ({email})', ['email' => Yii::$app->user->identity->email]),
+                    ['class' => 'btn btn-link logout']
+                )
+                . Html::endForm()
+                . '</li>'
+            )
         ],
     ]);
     NavBar::end();
