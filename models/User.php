@@ -3,26 +3,29 @@
 namespace app\models;
 
 use Yii;
-use yii\base\NotSupportedException;
 use yii\web\IdentityInterface;
+use yii\base\NotSupportedException;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * @inheritdoc
  */
 class User extends UserBase implements IdentityInterface
 {
-    const STATUS_DELETED = 0;
-    const STATUS_ACTIVE = 10;
+    const STATUS_REGISTERED = 0b0001;
+    const STATUS_CONFIRMED = 0b0010;
+    const STATUS_PWD_RESET_REQUESTED = 0b0100;
+    const STATUS_BLOCKED = 0b1000;
 
-    // /**
-    //  * @inheritdoc
-    //  */
-    // public function behaviors()
-    // {
-    //     return [
-    //         TimestampBehavior::className(),
-    //     ];
-    // }
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            TimestampBehavior::className(),
+        ];
+    }
 
     /**
      * @inheritdoc
@@ -30,8 +33,7 @@ class User extends UserBase implements IdentityInterface
     public function rules()
     {
         return [
-            ['status', 'default', 'value' => self::STATUS_ACTIVE],
-            ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
+            [['email'], 'required'],
         ];
     }
 
@@ -40,7 +42,7 @@ class User extends UserBase implements IdentityInterface
      */
     public static function findIdentity($id)
     {
-        return static::findOne(['id' => $id, 'status' => self::STATUS_ACTIVE]);
+        return static::findOne(['id' => $id, 'status' => self::STATUS_REGISTERED]);
     }
 
     /**
@@ -59,7 +61,7 @@ class User extends UserBase implements IdentityInterface
      */
     public static function findByEmail($email)
     {
-        return static::findOne(['email' => $email, 'status' => self::STATUS_ACTIVE]);
+        return static::findOne(['email' => $email, 'status' => self::STATUS_REGISTERED]);
     }
 
     /**
@@ -75,8 +77,8 @@ class User extends UserBase implements IdentityInterface
         }
 
         return static::findOne([
-            'password_reset_token' => $token,
-            'status' => self::STATUS_ACTIVE,
+            'reset_token' => $token,
+            'status' => self::STATUS_REGISTERED,
         ]);
     }
 
@@ -129,7 +131,7 @@ class User extends UserBase implements IdentityInterface
      */
     public function validatePassword($password)
     {
-        return Yii::$app->security->validatePassword($password, $this->password_hash);
+        return Yii::$app->security->validatePassword($password, $this->password);
     }
 
     /**
@@ -139,7 +141,7 @@ class User extends UserBase implements IdentityInterface
      */
     public function setPassword($password)
     {
-        $this->password_hash = Yii::$app->security->generatePasswordHash($password);
+        $this->password = Yii::$app->security->generatePasswordHash($password);
     }
 
     /**
@@ -155,7 +157,7 @@ class User extends UserBase implements IdentityInterface
      */
     public function generatePasswordResetToken()
     {
-        $this->password_reset_token = Yii::$app->security->generateRandomString() . '_' . time();
+        $this->reset_token = Yii::$app->security->generateRandomString() . '_' . time();
     }
 
     /**
@@ -163,6 +165,6 @@ class User extends UserBase implements IdentityInterface
      */
     public function removePasswordResetToken()
     {
-        $this->password_reset_token = null;
+        $this->reset_token = null;
     }
 }

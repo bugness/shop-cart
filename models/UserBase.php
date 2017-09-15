@@ -10,10 +10,11 @@ use Yii;
  * @property integer $id
  * @property string $email
  * @property string $auth_key
- * @property string $password_hash
- * @property string $password_reset_token
- * @property string $status
- * @property string $type
+ * @property string $password
+ * @property string $reset_token
+ * @property integer $status
+ * @property string $created_at
+ * @property string $updated_at
  */
 class UserBase extends \yii\db\ActiveRecord
 {
@@ -31,12 +32,14 @@ class UserBase extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['email', 'auth_key', 'password_hash'], 'required'],
-            [['email'], 'string', 'max' => 100],
+            [['email', 'auth_key', 'password', 'created_at', 'updated_at'], 'required'],
+            [['status'], 'integer'],
+            [['created_at', 'updated_at'], 'safe'],
+            [['email', 'reset_token'], 'string', 'max' => 100],
             [['auth_key'], 'string', 'max' => 32],
-            [['password_hash', 'password_reset_token', 'status', 'type'], 'string', 'max' => 45],
+            [['password'], 'string', 'max' => 60],
             [['email'], 'unique'],
-            [['password_reset_token'], 'unique'],
+            [['reset_token'], 'unique'],
         ];
     }
 
@@ -49,10 +52,11 @@ class UserBase extends \yii\db\ActiveRecord
             'id' => Yii::t('app', 'ID'),
             'email' => Yii::t('app', 'Email'),
             'auth_key' => Yii::t('app', 'Auth Key'),
-            'password_hash' => Yii::t('app', 'Password Hash'),
-            'password_reset_token' => Yii::t('app', 'Password Reset Token'),
+            'password' => Yii::t('app', 'Password'),
+            'reset_token' => Yii::t('app', 'Reset Token'),
             'status' => Yii::t('app', 'Status'),
-            'type' => Yii::t('app', 'Type'),
+            'created_at' => Yii::t('app', 'Created At'),
+            'updated_at' => Yii::t('app', 'Updated At'),
         ];
     }
 
